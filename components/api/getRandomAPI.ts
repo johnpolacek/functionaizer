@@ -4,7 +4,7 @@ export const getRandomAPI = () => {
     "Craft scenario ideas for role-playing games",
     "Provide mental wellness exercises based on user mood",
     "Create personalized workout plans based on fitness goals and equipment",
-    "Offer mock job interview questionstailored to specific industries",
+    "Offer mock job interview questions tailored to specific industries",
     "Suggest creative writing prompts for different genres and themes",
     "Generate marketing content ideas for various business types and audiences",
     "Generate personalized travel itineraries based on destinations and interests",

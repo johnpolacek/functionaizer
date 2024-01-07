@@ -15,6 +15,25 @@ export const Description: React.FC<DescriptionProps> = ({ apiDescription, setApi
 
   const [ nextClicked, setNextClicked ] = useState(false)
 
+  const animateText = (text: string) => {
+    const words = text.split(' ');
+    let index = 0;
+    const interval = 10 + Math.ceil(Math.random() * 100);
+    let currentText = '';
+
+    const addWord = () => {
+      if (index < words.length) {
+        currentText += (index === 0 ? '' : ' ') + words[index];
+        setApiDescription(currentText);
+        index++;
+        setTimeout(addWord, interval);
+      }
+    };
+
+    setApiDescription(''); // Clear existing text
+    addWord();
+  };
+
   return (
     <div className="md:w-1/2 mx-auto flex flex-col gap-4 pb-8">
       <Label className="text-3xl text-center font-bold" htmlFor="api-description">What do you want your API to do?</Label>
@@ -38,7 +57,7 @@ export const Description: React.FC<DescriptionProps> = ({ apiDescription, setApi
         !nextClicked && (
           <div className="flex justify-center mt-4 gap-4">
             <Button size="lg" className="bg-fuchsia-500 hover:bg-fuchsia-600 pl-6" onClick={() => {
-              setApiDescription(getRandomAPI())
+              animateText(getRandomAPI());
             }}><ArrowPathIcon className="h-6 w-6 text-white mr-2" />Random</Button>
             <Button disabled={!apiDescription} onClick={() => {
               onNext()
