@@ -14,3 +14,10 @@ export const fetchAIStreamFromPrompt = async (prompt: string) => {
     return error
   });
 };
+
+export function formatJSONQuotes(jsonString: string) {
+  // Regular expression to match single quotes at the start and end of strings, 
+  // and before and after colons and commas.
+  const regex = /'(?=\s*[\]:,})]|(?<=[\[{:,])\s*')/g;
+  return jsonString.replace(regex, '"');
+}

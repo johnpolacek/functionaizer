@@ -64,7 +64,7 @@ export const Properties = forwardRef<{ getCurrentState: () => ResponseProperty[]
       <div className="flex flex-col gap-4">
         {
           properties.map((property, index) => (
-            <div className="flex" key={index}>
+            <div className="flex gap-2" key={index}>
               <div className="grow grid grid-cols-3 gap-4">
                 <Input
                   className="col-span-2"
@@ -90,9 +90,8 @@ export const Properties = forwardRef<{ getCurrentState: () => ResponseProperty[]
                 />
               </div>
               {
-                properties.length > 1 && (<Button className="text-red-600" variant="ghost" onClick={() => handleRemoveProperty(index)}>×</Button>)
+                properties.length > 1 && (<Button className="text-red-600 px-4 hover:text-red-500" variant="ghost" onClick={() => handleRemoveProperty(index)}>×</Button>)
               }
-              
             </div>
           ))
         }

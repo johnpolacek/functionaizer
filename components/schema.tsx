@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from '@/components/ui/button';
 import { isValidTypeScriptInterface } from './util';
 import { generateUserInputs } from './api/generateUserInputs';
+import { generateResponseProperties } from './api/generateResponseProperties';
 import { Inputs, UserInput } from './inputs';
 import { Properties, ResponseProperty } from './properties';
 import { SparklesIcon } from '@heroicons/react/24/solid'
@@ -29,11 +30,16 @@ export const Schema = ({apiDescription}: {apiDescription: string}) => {
     const newUserInputs = response.inputs.map((label: string, index: number) => {
       const type = response.inputTypes[index];
       if (type !== 'string' && type !== 'number') {
-        return { label, type: 'string' }; // Default to 'string' or handle the error as needed
+        return { label, type: 'string' };
       }
       return { label, type: type as "string" | "number" };
     });
     setUserInputs(newUserInputs)
+    
+    const response2 = await generateResponseProperties(apiDescription, newUserInputs);
+    console.log({response2})
+    setResponseProperties(response2.properties)
+    
   }
   const [ userInputs, setUserInputs ] = useState<UserInput[]>([])
   const [ responseProperties, setResponseProperties ] = useState<ResponseProperty[] | undefined>(undefined)
