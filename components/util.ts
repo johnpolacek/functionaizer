@@ -1,19 +1,46 @@
-export const isValidTypeScriptInterface = (schema: string) => {
-  // Basic checks for TypeScript interface structure
-  const interfacePattern = /^\s*interface\s+\w+\s*{[^}]*}\s*$/;
-  const propertyPattern = /^\s*\w+\s*:\s*\w+;$/;
+import { UserInput } from "./inputs";
 
-  // Split schema into lines and check each line
-  const lines = schema.trim().split(/\n/);
-  if (!interfacePattern.test(lines[0])) {
-    return false; // First line must match the interface pattern
-  }
+interface GetOpenAIFunctionParams {
+  apiDescription: string;
+  userInputs: UserInput[]
+}
 
-  for (let i = 1; i < lines.length - 1; i++) {
-    if (!propertyPattern.test(lines[i])) {
-      return false; // Each property line must match the property pattern
+export const getOpenAIFunction = ({
+  apiDescription,
+  userInputs,
+}: GetOpenAIFunctionParams) => {
+  return `openai.chat.completions.create({
+  model: 'gpt-4',
+  stream: true,
+  messages,
+  tools: [
+    {
+      "type": "function",
+      "function": {
+        "name": "get_api_response",
+        "description": "You are an API that does the following: ${apiDescription} - you will be supplied with parameters of ${userInputs.map((input) => input.label).join(', ')}",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "items": {
+              "type": "string",
+              "enum": ["string", "number","boolean"],
+            },
+            "description": {
+              "type": "string"
+            },
+          },
+          "required": ["properties"]
+        }
+      }
     }
-  }
-
-  return true; // Passes all basic checks
+  ],
+  temperature: 0,
+  top_p: 1,
+  frequency_penalty: 1,
+  presence_penalty: 1,
+})`
 };

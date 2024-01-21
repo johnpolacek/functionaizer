@@ -1,7 +1,7 @@
 export const getRandomAPI = () => {
   const randomAPIs = [
     "Generate educational quizzes based on specific topics",
-    "Craft scenario ideas for role-playing games",
+    "Create a plot for a role-playing game adventure based on theme, player level and setting",
     "Provide mental wellness exercises based on user mood",
     "Create personalized workout plans based on fitness goals and equipment",
     "Offer mock job interview questions tailored to specific industries",
@@ -30,7 +30,7 @@ export const getRandomAPI = () => {
     "Generate custom photo album themes and layout ideas",
     "Provide historical facts and trivia based on specific eras or regions of interest",
     "Generate daily or weekly personal finance tips and budget management strategies",
-    "Offer guided virtual tours of historical sites or museums based on interests",
+    "Create a virtual tour itinerary of a historical site or museum based on user interests",
     "Create customized pet training routines for different pet species and behaviors",
     "Suggest hobby ideas and resources based on interests and available time",
     "Positive affirmation generator tailored to individual goals and challenges",
@@ -57,8 +57,17 @@ export const getRandomAPI = () => {
     "Develop ideas for sustainable and eco-friendly travel",
     "Offer organization and productivity tips tailored to specific work or study environments",
     "Generate custom comic strip or cartoon ideas for amateur artists or hobbyists",
-    "Suggest music or instrument learning resources based on musical interests and skill level",
+    "Suggest music pieces to learn for learning an instrumentbased on musical interests and skill level",
     "Provide home brewing or winemaking recipes and tips based on user experience and taste preference",
+    "Generate lesson plan ideas for teachers based on grade, subject and theme",
+    "Suggest full names for characters in movies, books or other stories",
+    "Create random prompts for AI image generators",
+    "Suggest activity ideas for bored kids",
+    "Write satirical articles based on a theme",
+    "Offer fashion suggestions and advice based on user needs",
+    "Create RPG encounter scenarios based on theme and setting",
+    "Generate themes and settings for fantasy game roleplaying adventures",
+    "Suggest project ideas for an art student based on their medium and interests",
   ]
   return randomAPIs[Math.floor(Math.random() * randomAPIs.length)];
 };

@@ -1,6 +1,14 @@
-export const generateUserInputs = async (description: string) => {
+import { ChatCompletionMessageParam, ChatCompletionTool } from "openai/resources/index.mjs";
+import { generateData } from "../ai/util";
 
- const messages = [{
+interface UserInputsResponse {
+  inputs: string[];
+  inputTypes: string[];
+}
+
+export const generateUserInputs = async (description: string): Promise<UserInputsResponse> => {
+
+ const messages: ChatCompletionMessageParam[] = [{
     role: "system",
     content:
       "You are an API builder that recommends human readable labels for fields that a user would input for an API based on a description of the API. The inputs can be either a string, a number or null if there are no user inputs necessary for the API.",
@@ -10,7 +18,7 @@ export const generateUserInputs = async (description: string) => {
     content: `Provide user inputs for this api: "${description}" - respond only with JSON data in the form of {inputs: string[],inputTypes:string[]}`,
   }]
 
-  const tools = [
+  const tools: ChatCompletionTool[] = [
     {
       "type": "function",
       "function": {
@@ -40,33 +48,6 @@ export const generateUserInputs = async (description: string) => {
       }
     }
   ]
-
-  console.log(JSON.stringify({
-    model: 'gpt-4',
-    stream: true,
-    messages,
-    tools,
-    temperature: 0,
-    top_p: 1,
-    frequency_penalty: 1,
-    presence_penalty: 1,
-  }))
   
-
-  return fetch('/api/completion', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ messages, tools })
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Success:', data);
-    return data;
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-    return error
-  });
+  return generateData(messages, tools)
 };

@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        mono: ['var(--font-source-code-pro)'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

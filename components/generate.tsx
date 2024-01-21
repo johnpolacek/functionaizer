@@ -10,13 +10,16 @@ export const Generate: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-8 px-4">
-      <Description 
-        apiDescription={apiDescription} 
-        setApiDescription={setApiDescription} 
-        onNext={handleNextClick}
-      />
       {
-        showSchema && (<Schema apiDescription={apiDescription} />)
+        showSchema ? (
+          <Schema apiDescription={apiDescription} />
+        ) : (
+          <Description 
+            apiDescription={apiDescription} 
+            setApiDescription={setApiDescription} 
+            onNext={handleNextClick}
+          />
+        )
       }
     </div>
   );

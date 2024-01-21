@@ -1,10 +1,15 @@
 import { UserInput } from "../inputs";
-import untruncateJson from "untruncate-json";
-import { formatJSONQuotes } from "./util";
+import { ChatCompletionMessageParam, ChatCompletionTool } from "openai/resources/index.mjs";
+import { generateData } from "../ai/util";
+import { ResponseProperty } from "../properties";
 
-export const generateResponseProperties = async (description: string, userInputs: UserInput[]) => {
+interface ResponsePropertiesResponse {
+  properties: ResponseProperty[]
+}
 
- const messages = [{
+export const generateResponseProperties = async (description: string, userInputs: UserInput[]): Promise<ResponsePropertiesResponse> => {
+
+  const messages: ChatCompletionMessageParam[] = [{
     role: "system",
     content:
       `You are an API builder. Provide API response properties based on an API of this description "${description}" and these fields that a user would input: ${JSON.stringify(userInputs)}  - the response properties have a name for the property which should be camel case, a type that can a string, a number or boolean and a description of the property. ALL RESPONSES SHOULD BE VALID JSON!`,
@@ -14,7 +19,7 @@ export const generateResponseProperties = async (description: string, userInputs
     content: `Provide response properties for this api: "${description}" - respond only with properly formatted double-quoted JSON data in the form of {properties: {name:string,type:"string" | "number" | "boolean", description: string}[]} -- YOUR RESPONSE SHOULD BE VALID JSON!`,
   }]
 
-  const tools = [
+  const tools: ChatCompletionTool[] = [
     {
       "type": "function",
       "function": {
@@ -40,37 +45,5 @@ export const generateResponseProperties = async (description: string, userInputs
     }
   ]
 
-  console.log(JSON.stringify({
-    model: 'gpt-4',
-    stream: true,
-    messages,
-    tools,
-    temperature: 0,
-    top_p: 1,
-    frequency_penalty: 1,
-    presence_penalty: 1,
-  }))
-  
-
-  return fetch('/api/completion', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ messages, tools })
-  })
-  .then(response => response.text())
-  .then(text => {
-    let correctedJson = formatJSONQuotes(text);
-    correctedJson = untruncateJson(correctedJson);
-    return JSON.parse(correctedJson);
-  })
-  .then(data => {
-    console.log('Success:', data);
-    return data;
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-    return error
-  });
+  return generateData(messages, tools)
 };

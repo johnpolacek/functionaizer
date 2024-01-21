@@ -1,75 +1,111 @@
-import React, { useState, useRef } from 'react';
-import { Label } from "@/components/ui/label"
-import { Button } from '@/components/ui/button';
-import { isValidTypeScriptInterface } from './util';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { generateName } from './api/generateName';
 import { generateUserInputs } from './api/generateUserInputs';
 import { generateResponseProperties } from './api/generateResponseProperties';
-import { Inputs, UserInput } from './inputs';
-import { Properties, ResponseProperty } from './properties';
-import { SparklesIcon } from '@heroicons/react/24/solid'
+import { Demo } from './demo';
+import { UserInput } from './inputs';
+import { ResponseProperty } from './properties';
+import FadeInUp from './animation/FadeInUp';
+import { SchemaForm } from './schema-form';
+import FadeIn from './animation/FadeIn';
+import Loading from './animation/Loading';
+import { ApiLogo } from './api-logo';
+import { UsageDialog } from './usage-dialog';
 
-type InputsRef = {
+export type InputsRef = {
   getCurrentState: () => UserInput[];
 };
 
-type PropertiesRef = {
+export type PropertiesRef = {
   getCurrentState: () => ResponseProperty[];
 };
 
 export const Schema = ({apiDescription}: {apiDescription: string}) => {
   const inputsRef = useRef<InputsRef>(null);
   const propertiesRef = useRef<PropertiesRef>(null);
+  const [ lastCalledDescription, setLastCalledDescription ] = useState('');
+  const [ usageExceeded, setUsageExceeded ] = useState(false)
 
-  const [ responseSchema, setResponseSchema ] = useState("")
-  const generateAutomagically = async () => {
-    const response = await generateUserInputs(apiDescription)
-    if (!response || !response.inputs || !response.inputTypes || response.inputs.length !== response.inputTypes.length) {
-      console.error("Invalid response format");
-      return [];
-    }
-    const newUserInputs = response.inputs.map((label: string, index: number) => {
-      const type = response.inputTypes[index];
-      if (type !== 'string' && type !== 'number') {
-        return { label, type: 'string' };
-      }
-      return { label, type: type as "string" | "number" };
-    });
-    setUserInputs(newUserInputs)
-    
-    const response2 = await generateResponseProperties(apiDescription, newUserInputs);
-    console.log({response2})
-    setResponseProperties(response2.properties)
-    
-  }
+  const [ apiName, setApiName ] = useState("")
   const [ userInputs, setUserInputs ] = useState<UserInput[]>([])
   const [ responseProperties, setResponseProperties ] = useState<ResponseProperty[] | undefined>(undefined)
+  
+  const generateAutomagically = useCallback(async () => {
+    if (apiDescription === lastCalledDescription) {
+      return; // Exit if this apiDescription has already been processed
+    }
+    setLastCalledDescription(apiDescription);
 
-  const handleNextClick = () => {
-    const currentInputs = inputsRef.current?.getCurrentState();
-    const currentProperties = propertiesRef.current?.getCurrentState();
+    try {
+      const apiNameResponse = await generateName(apiDescription);
+      if (!apiNameResponse || !apiNameResponse.name) {
+        console.error("Invalid response format");
+        return [];
+      }
+      setApiName(apiNameResponse.name)
 
-    console.log('User Inputs:', currentInputs);
-    console.log('Response Properties:', currentProperties);
-  };
+      const response = await generateUserInputs(apiDescription)
+      if (!response || !response.inputs || !response.inputTypes || response.inputs.length !== response.inputTypes.length) {
+        console.error("Invalid response format");
+        return [];
+      }
+      const newUserInputs: UserInput[] = response.inputs.map((label: string, index: number) => {
+        const type = response.inputTypes[index];
+        if (type !== 'string' && type !== 'number') {
+          return { label, type: 'string' };
+        }
+        return { label, type: type as "string" | "number" };
+      });
+      setUserInputs(newUserInputs)
+      
+      const response2 = await generateResponseProperties(apiDescription, newUserInputs);
+      console.log({response2})
+      console.log("setResponseProperties", response2.properties)
+      setResponseProperties(response2.properties)
 
-  return (
-    <>
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="flex flex-col w-full gap-4">
-          <Label className="text-xl font-semibold" htmlFor="api-schema">What fields should your users enter?</Label>
-          <Inputs userInputs={userInputs} ref={inputsRef} />
-        </div>
-        <div className="flex flex-col w-full gap-4">
-          <Label className="text-xl font-semibold" htmlFor="api-schema">What properties should your API respond with?</Label>
-          <Properties responseProperties={responseProperties} ref={propertiesRef} />
-        </div>
-      </div>
-      <div className="flex justify-center gap-4 pt-16">
-        <Button className="bg-fuchsia-500 hover:bg-fuchsia-600 hover:scale-105 pl-6" onClick={generateAutomagically} size="lg">
-          <SparklesIcon className="h-6 w-6 text-white mr-2" />Use AI Magic
-        </Button>
-        <Button onClick={handleNextClick} disabled={Boolean(responseSchema) && isValidTypeScriptInterface(responseSchema)} size="lg">Next »</Button>
-      </div>
-    </>
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('Usage limit exceeded')) {
+          setUsageExceeded(true)
+      } else {
+        console.error('An error occurred:', error);
+        if (error instanceof Error) {
+          throw error;
+        } else {
+          throw new Error('An unknown error occurred');
+        }
+      }
+    }
+
+  }, [apiDescription, lastCalledDescription]);
+
+  useEffect(() => {
+    if (apiDescription && apiDescription !== lastCalledDescription) {
+      generateAutomagically();
+    }
+  }, [apiDescription, generateAutomagically, lastCalledDescription]);
+
+  return responseProperties?.length ? (
+    <div className="flex flex-col gap-12">
+      <UsageDialog open={usageExceeded} />
+      <ApiLogo name={apiName} description={apiDescription} />
+      <FadeInUp className="w-full text-center pt-12 -mb-12">
+        <h2 className="font-semibold text-5xl text-blue-600 pb-1">{apiName}</h2>
+        <h3>{apiDescription}</h3>
+      </FadeInUp>
+      <FadeInUp delay={200}>
+        <Demo apiDescription={apiDescription} userInputs={userInputs} responseProperties={responseProperties} />
+      </FadeInUp>
+      <FadeIn delay={1000}>
+        <SchemaForm 
+          userInputs={userInputs} 
+          responseProperties={responseProperties} 
+          inputsRef={inputsRef} 
+          propertiesRef={propertiesRef} 
+          apiDescription={apiDescription}
+        />
+      </FadeIn>
+    </div>  
+  ) : (
+    <div className="scale-150"><Loading /></div>
   );
 };
