@@ -15,7 +15,7 @@ export function UsageDialog({open}: {open: boolean}) {
         <DialogHeader>
           <DialogTitle>Usage Limit Reached</DialogTitle>
           <DialogDescription>
-            Unfortunately Functionaizer has hit its daily usage limit. Either try again tomorrow, or download the project and run locally.
+            Unfortunately Functionaizer has hit its daily usage limit. Either try again tomorrow, or download the project and run locally, see <a className="text-blue-600 underline" href="https://github.com/johnpolacek/functionaizer">the project page</a> for instructions.
           </DialogDescription>
         </DialogHeader>
         <Button className="px-16 mt-4 block" onClick={() => window.location.reload()}>OK</Button>
