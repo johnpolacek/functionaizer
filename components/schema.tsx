@@ -89,7 +89,7 @@ export const Schema = ({apiDescription}: {apiDescription: string}) => {
       <UsageDialog open={usageExceeded} />
       <ApiLogo name={apiName} description={apiDescription} />
       <FadeInUp className="w-full text-center pt-12 -mb-12">
-        <h2 className="font-semibold text-5xl text-blue-600 pb-1">{apiName}</h2>
+        <h2 className="font-semibold text-3xl sm:text-5xl text-blue-600 pb-1">{apiName}</h2>
         <h3>{apiDescription}</h3>
       </FadeInUp>
       <FadeInUp delay={200}>

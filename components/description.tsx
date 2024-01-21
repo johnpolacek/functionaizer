@@ -41,11 +41,11 @@ export const Description: React.FC<DescriptionProps> = ({ apiDescription, setApi
   return (
     <div className="md:w-1/2 mx-auto">
       <FadeInUp className="flex flex-col gap-4 pb-8">
-        <Label className="text-3xl text-center font-light" htmlFor="api-description">What do you want your API to do?</Label>
+        <Label className="text-3xl text-center font-light px-6" htmlFor="api-description">What do you want your API to do?</Label>
         <Textarea
           onChange={(e) => setApiDescription(e.target.value)}
           value={apiDescription}
-          className="h-16 text-center"
+          className="h-24 sm:h-16 text-center"
           id="api-description"
           autoFocus
           onKeyDown={(e) => {
@@ -61,22 +61,22 @@ export const Description: React.FC<DescriptionProps> = ({ apiDescription, setApi
       </FadeInUp>
       {
         !nextClicked && (
-          <div className={cn("flex justify-center mt-4 mx-auto gap-4 duration-500 transition-all", apiDescription ? "w-[20rem]" : "w-[11rem]")}>
+          <div className={cn("flex justify-center mt-4 mx-auto gap-2 sm:gap-4 duration-500 transition-all", apiDescription ? "w-[20rem]" : "w-[11rem]")}>
             <FadeScaleIn className={cn("flex duration-100 transition-all ease-in-out justify-end", apiDescription ? "w-1/2" : "w-full")} delay={300}>
-              <Button size="lg" className="pl-6" onClick={() => {
+              <Button size="lg" className="h-9 sm:h-12 text-sm sm:text-xl pl-6" onClick={() => {
                 setCount(prevCount => prevCount + 1);
                 animateText(getRandomAPI());
-              }}><ArrowPathIcon style={{transform: `rotate(${count * 180}deg)`}} className="h-6 w-6 text-white mr-2 transition-all duration-700 ease-in-out" />Random</Button>
+              }}><ArrowPathIcon style={{transform: `rotate(${count * 180}deg)`}} className="h-4 sm:h-6 w-4 sm:w-6 text-white mr-2 transition-all duration-700 ease-in-out" />Random</Button>
             </FadeScaleIn>
             <div className={cn("duration-200 transition-all ease-in-out", apiDescription ? "w-1/2" : "w-0")}>
               {
                 apiDescription && (
                   <FadeScaleIn delay={200}>
-                    <Button className="bg-fuchsia-500 hover:bg-fuchsia-600 duration-1000 pl-6" onClick={() => {
+                    <Button className="bg-fuchsia-500 hover:bg-fuchsia-600 duration-1000 pl-6 h-9 sm:h-12 text-sm sm:text-xl" onClick={() => {
                       onNext()
                       setNextClicked(true)
                     }} size="lg">
-                      <SparklesIcon className="h-6 w-6 text-white mr-2" />Functionaize
+                      <SparklesIcon className="h-4 sm:h-6 w-4 sm:w-6 text-white mr-2" />Functionaize
                     </Button>
                   </FadeScaleIn>
                 )

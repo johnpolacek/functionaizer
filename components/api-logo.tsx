@@ -37,9 +37,9 @@ export function ApiLogo({ name, description }: { name: string; description: stri
     <div className="w-full flex justify-center items-center -mb-16 relative top-4 scale-90">
       {
         imageUrl ? (
-          <Image className="w-[256px] h-[256px] rounded-full border-4 overflow-hidden" src={imageUrl} width={256} height={256} alt="AI Generated Image" />
+          <Image className="w-[120px] h-[120px] sm:w-[256px] sm:h-[256px] rounded-full border-4 overflow-hidden" src={imageUrl} width={256} height={256} alt="AI Generated Image" />
         ) : (
-          <div className="w-[256px] h-[256px] flex items-center rounded-full border-4 overflow-hidden">
+          <div className="w-[120px] h-[120px] sm:w-[256px] sm:h-[256px] flex items-center rounded-full border-4 overflow-hidden">
             <Loading />
           </div>
         ) 

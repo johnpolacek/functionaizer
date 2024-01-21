@@ -2,7 +2,7 @@ import React from 'react';
 import FadeIn from './FadeIn';
 
 const Wordmark = () => (
-  <h1 aria-label="Functionaizer" className="text-6xl text-center mb-2 font-light font-mono">
+  <h1 aria-label="Functionaizer" className="text-3xl sm:text-6xl text-center mb-2 font-light font-mono">
     <FadeIn as="span" className="duration-1000" delay={1500} aria-hidden="true">F</FadeIn>
     <FadeIn as="span" className="duration-700" delay={2300} aria-hidden="true">u</FadeIn>
     <FadeIn as="span" className="duration-1000" delay={1600} aria-hidden="true">n</FadeIn>
