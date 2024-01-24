@@ -14,7 +14,7 @@ export const generateName = async (description: string): Promise<NameResponse> =
   },
   {
     role: "user",
-    content: `Provide a name for this api: "${description}" - respond only with JSON data in the form of {name:string}`,
+    content: `Provide a name for this api: "${description}" - respond only with JSON data in the form of {name:string} - YOU MUST RESPOND WITH VALID JSON ONLY!`,
   }]
 
   const tools: ChatCompletionTool[] = [
@@ -31,7 +31,7 @@ export const generateName = async (description: string): Promise<NameResponse> =
               "description": "Name for an api based on a description"
             },
           },
-          "required": ["names"]
+          "required": ["name"]
         }
       }
     }
