@@ -46,7 +46,9 @@ export const SchemaForm: React.FC<SchemaFormProps> = ({ userInputs, responseProp
       </div>
       <div className="border-t pt-8 sm:p-8">
         <div className="text-4xl font-light text-center pb-8">Your Function</div>
-        <Code language="language-jsx" code={getOpenAIFunction({apiDescription, userInputs})} />
+        {
+          responseProperties && (<Code language="language-jsx" code={getOpenAIFunction({apiDescription, userInputs, responseProperties})} />)
+        }
       </div>
     </div>
   );
