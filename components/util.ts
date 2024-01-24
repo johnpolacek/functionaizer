@@ -7,6 +7,9 @@ interface GetOpenAIFunctionParams {
   responseProperties: ResponseProperty[];
 }
 
+// The parameters the functions accepts, described as a JSON Schema object. See the guide for examples, and the JSON Schema reference for documentation about the format.
+// https://json-schema.org/understanding-json-schema
+
 export const getOpenAIFunction = ({
   apiDescription,
   userInputs,
