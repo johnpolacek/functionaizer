@@ -24,7 +24,7 @@ export const SchemaForm: React.FC<SchemaFormProps> = ({ apiDescription }) => {
           <div className="text-xl font-medium">What fields should your users enter?</div>
           {
             editMode ? (
-              <Inputs userInputs={userInputs} />
+              <Inputs />
             ) : (
               <ReadOnlyInputs userInputs={userInputs} />
             )
@@ -34,7 +34,7 @@ export const SchemaForm: React.FC<SchemaFormProps> = ({ apiDescription }) => {
           <div className="text-xl font-medium">What should your API respond with?</div>
           {
             editMode ? (
-              <Properties responseProperties={responseProperties} />
+              <Properties />
             ) : (
               <ReadOnlyProperties responseProperties={responseProperties} />
             )
