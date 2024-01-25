@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
+import { useAppContext } from './context/AppContext';
+import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@/components/ui/select"
+import { ChatCompletionMessageParam, ChatCompletionTool } from "openai/resources/index.mjs";
 import { Label } from "@/components/ui/label";
 import { Button } from '@/components/ui/button';
-import { UserInput } from './inputs';
 import { Input } from './ui/input';
-import { ResponseProperty } from './properties';
-import { ChatCompletionMessageParam, ChatCompletionTool } from "openai/resources/index.mjs";
-import { generateData } from './ai/util';
+import { Switch } from './ui/switch';
 import Loading from './animation/Loading';
 import Code from './ui/code';
+import { generateData } from './ai/util';
+import { ArrowPathIcon } from '@heroicons/react/24/solid';
 
 interface FunctionProperties {
   [key: string]: { type: string };
@@ -17,7 +19,10 @@ interface FormData {
     [key: string]: string;
 }
 
-export const Demo = ({ apiDescription, userInputs, responseProperties }: { apiDescription: string, userInputs: UserInput[], responseProperties: ResponseProperty[] }) => {
+export const Demo = ({ apiDescription }: { apiDescription: string }) => {
+
+  const { model, setModel, functionCall, setFunctionCall, userInputs, responseProperties } = useAppContext();
+
   const [formData, setFormData] = useState<FormData>({});
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [apiResponse, setApiResponse] = useState("")
@@ -49,7 +54,7 @@ export const Demo = ({ apiDescription, userInputs, responseProperties }: { apiDe
         content: `Provide response properties for this api: "${apiDescription}" - respond only with properly formatted double-quoted JSON data in the shape of this interface: ${interfaceCode} -- YOUR RESPONSE SHOULD BE VALID JSON!`,
       }
     ]
-    const tools: ChatCompletionTool[] = [
+    const tools: ChatCompletionTool[] | undefined = functionCall ? [
       {
         type: "function",
         function: {
@@ -62,9 +67,8 @@ export const Demo = ({ apiDescription, userInputs, responseProperties }: { apiDe
           }
         }
       }
-    ]
-    console.log({messages, tools})
-    const response = await generateData(messages, tools);
+    ] : undefined;
+    const response = await generateData(messages, tools, model);
     setApiResponse(JSON.stringify(response, null, 2))
   };
 
@@ -76,13 +80,20 @@ export const Demo = ({ apiDescription, userInputs, responseProperties }: { apiDe
       {
         apiResponse ? (
           <div className="w-full max-w-xl mx-auto p-4">
+            <h2 className="font-light text-2xl py-4 text-center">API Response</h2>
+            <div className="flex justify-center">
+              <Button onClick={() => {
+                setIsSubmitted(false)
+                setApiResponse("")
+              }}><ArrowPathIcon className="h-4 sm:h-6 w-4 sm:w-6 text-white relative -left-2" />Try Again</Button>
+            </div>
             <div className="grid grid-cols-2 gap-2 pt-6 pb-8 pl-12 pr-10 border rounded-xl my-4">
               {
-                Object.keys(data).map((key) => (
-                  <>
+                Object.keys(data).map((key, i) => (
+                  <React.Fragment key={i}>
                     <div className="text-gray-500 font-light">{key}</div>
                     <div className="font-medium">{data[key].toString()}</div>
-                  </>
+                  </React.Fragment>
                 ))
               }
             </div>
@@ -111,6 +122,25 @@ export const Demo = ({ apiDescription, userInputs, responseProperties }: { apiDe
                       />
                     </div>
                   ))}
+                  <div className="grid grid-cols-2 gap-16">
+                    <Select value={model} onValueChange={(value: "gpt-3.5-turbo" | "gpt-4") => setModel(value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Model" />
+                      </SelectTrigger>
+                      <SelectContent position="popper">
+                        <SelectItem value="gpt-3.5-turbo">gpt-3.5-turbo</SelectItem>
+                        <SelectItem value="gpt-4">gpt-4</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <div className="flex items-center justify-end space-x-2 pr-2">
+                      <Switch id="function_call"
+                        className="cursor-pointer"
+                        checked={functionCall}
+                        onCheckedChange={() => setFunctionCall(!functionCall)}
+                      />
+                      <Label className="font-mono" htmlFor="function_call">function_call</Label>
+                    </div>
+                  </div>
                   <div className="flex justify-center gap-4 pt-4">
                     <Button className="px-12" type="submit" size="lg">Submit</Button>
                   </div>

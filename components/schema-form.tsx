@@ -13,7 +13,7 @@ type SchemaFormProps = {
 };
 
 export const SchemaForm: React.FC<SchemaFormProps> = ({ apiDescription }) => {
-  const { userInputs, responseProperties } = useAppContext();
+  const { userInputs, responseProperties, model, functionCall } = useAppContext();
   const [ editMode, setEditMode ] = useState(false)
   
   return (
@@ -44,7 +44,7 @@ export const SchemaForm: React.FC<SchemaFormProps> = ({ apiDescription }) => {
       <div className="border-t pt-8 sm:p-8">
         <div className="text-4xl font-light text-center pb-8">Your Function</div>
         {
-          responseProperties && (<Code language="language-jsx" code={getOpenAIFunction({apiDescription, userInputs, responseProperties})} />)
+          responseProperties && (<Code language="language-jsx" code={getOpenAIFunction({apiDescription, userInputs, responseProperties, model, functionCall})} />)
         }
       </div>
     </div>

@@ -5,6 +5,8 @@ interface GetOpenAIFunctionParams {
   apiDescription: string;
   userInputs: UserInput[];
   responseProperties: ResponseProperty[];
+  model: "gpt-4" | "gpt-3.5-turbo";
+  functionCall: boolean;
 }
 
 // The parameters the functions accepts, described as a JSON Schema object. See the guide for examples, and the JSON Schema reference for documentation about the format.
@@ -14,9 +16,12 @@ export const getOpenAIFunction = ({
   apiDescription,
   userInputs,
   responseProperties,
+  model,
+  functionCall,
 }: GetOpenAIFunctionParams) => {
+  
   return `openai.chat.completions.create({
-  model: 'gpt-4',
+  model: '${model}',
   stream: true,
   messages: [
     {
@@ -28,7 +33,7 @@ export const getOpenAIFunction = ({
       content: "You are an API that does the following: ${apiDescription} - Provided these parameters "+JSON.stringify(body.params)+" - respond only with JSON data in the form of {${responseProperties.map((property) => (`${property.name}:"${property.type}"`))}} - YOU MUST RESPOND WITH VALID JSON ONLY!"
     }
   ],
-  tools: [
+  ${functionCall ? `tools: [
     {
       "type": "function",
       "function": {
@@ -47,7 +52,7 @@ export const getOpenAIFunction = ({
         }
       }
     }
-  ],
+  ],` : ''}
   temperature: 0,
   top_p: 1,
   frequency_penalty: 1,
