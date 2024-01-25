@@ -1,22 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Inputs, UserInput } from './inputs';
+import React, { useState } from 'react';
+import { useAppContext } from './context/AppContext';
+import { Inputs } from './inputs';
 import { ReadOnlyInputs } from './readonly-inputs';
-import { Properties, ResponseProperty } from './properties';
+import { Properties } from './properties';
 import { ReadOnlyProperties } from './readonly-properties';
-import { InputsRef, PropertiesRef } from './schema';
 import { getOpenAIFunction } from './util';
 import { Button } from './ui/button';
 import Code from './ui/code';
 
 type SchemaFormProps = {
-  userInputs: UserInput[];
-  responseProperties: ResponseProperty[] | undefined;
-  inputsRef: React.RefObject<InputsRef>;
-  propertiesRef: React.RefObject<PropertiesRef>;
   apiDescription: string;
 };
 
-export const SchemaForm: React.FC<SchemaFormProps> = ({ userInputs, responseProperties, inputsRef, propertiesRef, apiDescription }) => {
+export const SchemaForm: React.FC<SchemaFormProps> = ({ apiDescription }) => {
+  const { userInputs, responseProperties } = useAppContext();
   const [ editMode, setEditMode ] = useState(false)
   
   return (
@@ -27,7 +24,7 @@ export const SchemaForm: React.FC<SchemaFormProps> = ({ userInputs, responseProp
           <div className="text-xl font-medium">What fields should your users enter?</div>
           {
             editMode ? (
-              <Inputs userInputs={userInputs} ref={inputsRef} />
+              <Inputs userInputs={userInputs} />
             ) : (
               <ReadOnlyInputs userInputs={userInputs} />
             )
@@ -37,7 +34,7 @@ export const SchemaForm: React.FC<SchemaFormProps> = ({ userInputs, responseProp
           <div className="text-xl font-medium">What should your API respond with?</div>
           {
             editMode ? (
-              <Properties responseProperties={responseProperties} ref={propertiesRef} />
+              <Properties responseProperties={responseProperties} />
             ) : (
               <ReadOnlyProperties responseProperties={responseProperties} />
             )

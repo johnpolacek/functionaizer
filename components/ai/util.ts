@@ -24,7 +24,7 @@ export const getStreamingData = async ({
 
   let payload = {
     messages: messages || [{ role: "user", content: prompt }],
-    model: model || "gpt-4",
+    model: model || "gpt-3.5-turbo",
     tools,
   }
 
@@ -90,11 +90,12 @@ export const getStreamingData = async ({
 }
  
 
-export const generateData = <T,>(messages: ChatCompletionMessageParam[], tools: ChatCompletionTool[]): Promise<T> => {
+export const generateData = <T,>(messages: ChatCompletionMessageParam[], tools?: ChatCompletionTool[], model?: "gpt-4" | "gpt-3.5-turbo"): Promise<T> => {
   return new Promise((resolve, reject) => {
     getStreamingData({
       messages,
       tools,
+      model,
       onData: (data) => {
         // Process onData if needed
       },

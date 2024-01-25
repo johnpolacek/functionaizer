@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useAppContext } from './context/AppContext';
 import { generateName } from './api/generateName';
 import { generateUserInputs } from './api/generateUserInputs';
 import { generateResponseProperties } from './api/generateResponseProperties';
@@ -21,14 +22,12 @@ export type PropertiesRef = {
 };
 
 export const Schema = ({apiDescription}: {apiDescription: string}) => {
-  const inputsRef = useRef<InputsRef>(null);
-  const propertiesRef = useRef<PropertiesRef>(null);
+  const { userInputs, setUserInputs, responseProperties, setResponseProperties } = useAppContext();
   const [ lastCalledDescription, setLastCalledDescription ] = useState('');
   const [ usageExceeded, setUsageExceeded ] = useState(false)
 
   const [ apiName, setApiName ] = useState("")
-  const [ userInputs, setUserInputs ] = useState<UserInput[]>([])
-  const [ responseProperties, setResponseProperties ] = useState<ResponseProperty[] | undefined>(undefined)
+  
   
   const generateAutomagically = useCallback(async () => {
     if (apiDescription === lastCalledDescription) {
@@ -96,13 +95,7 @@ export const Schema = ({apiDescription}: {apiDescription: string}) => {
         <Demo apiDescription={apiDescription} userInputs={userInputs} responseProperties={responseProperties} />
       </FadeInUp>
       <FadeIn delay={1000}>
-        <SchemaForm 
-          userInputs={userInputs} 
-          responseProperties={responseProperties} 
-          inputsRef={inputsRef} 
-          propertiesRef={propertiesRef} 
-          apiDescription={apiDescription}
-        />
+        <SchemaForm  apiDescription={apiDescription} />
       </FadeIn>
     </div>  
   ) : (

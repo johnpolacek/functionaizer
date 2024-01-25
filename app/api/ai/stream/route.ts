@@ -4,6 +4,10 @@ import { readUsage } from "@/lib/s3/operations/readUsage"
 
 export const runtime = "edge"
 
+// Test with this
+// Suggest a setting name, description and intro to an rpg campaign like one for sale at a hobby shop given a genre and keywords
+// Sometimes the stream will timeout if you include the function
+
 export async function POST(req: NextRequest) {
 
   if (process.env.USAGE_LIMIT) {
@@ -13,10 +17,10 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const { messages, tools } = await req.json()
+  const { messages, tools, model } = await req.json()
   
   const stream = await getStream({
-    model: "gpt-4",
+    model: model || "gpt-3.5-turbo",
     messages,
     tools,
     stream: true,

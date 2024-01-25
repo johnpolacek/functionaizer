@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Description } from './description';
+import { AppProvider } from './context/AppContext';
 import { Schema } from './schema';
 
 export const Generate: React.FC = () => {
@@ -12,7 +13,9 @@ export const Generate: React.FC = () => {
     <div className="flex flex-col gap-8 px-4">
       {
         showSchema ? (
-          <Schema apiDescription={apiDescription} />
+          <AppProvider>
+            <Schema apiDescription={apiDescription} />
+          </AppProvider>
         ) : (
           <Description 
             apiDescription={apiDescription} 

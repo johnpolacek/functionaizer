@@ -48,6 +48,7 @@ export const generateUserInputs = async (description: string): Promise<UserInput
       }
     }
   ]
-  
-  return generateData(messages, tools)
+
+  return generateData(messages)  // including tools can make the stream timeout
+  // return generateData(messages, tools)
 };

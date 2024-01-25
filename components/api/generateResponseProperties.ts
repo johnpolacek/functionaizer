@@ -45,5 +45,6 @@ export const generateResponseProperties = async (description: string, userInputs
     }
   ]
 
-  return generateData(messages, tools)
+  return generateData(messages) // including tools can make the stream timeout
+  // return generateData(messages, tools)
 };

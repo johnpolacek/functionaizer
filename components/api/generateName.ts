@@ -37,5 +37,5 @@ export const generateName = async (description: string): Promise<NameResponse> =
     }
   ]
   
-  return generateData(messages, tools)
+  return generateData(messages)
 };
