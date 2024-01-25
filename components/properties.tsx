@@ -92,7 +92,7 @@ export const Properties = () => {
         ))
       }
       <div>
-        <Button size="sm" className="bg-blue-500" onClick={() => setProperties([...responseProperties, newProperty])}>+ Add Property</Button>
+        <Button size="sm" className="bg-blue-500" onClick={() => setResponseProperties([...responseProperties, newProperty])}>+ Add Property</Button>
       </div>
     </div>
   );
