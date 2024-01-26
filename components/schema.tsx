@@ -22,7 +22,7 @@ export type PropertiesRef = {
 };
 
 export const Schema = ({apiDescription}: {apiDescription: string}) => {
-  const { userInputs, setUserInputs, responseProperties, setResponseProperties } = useAppContext();
+  const { setUserInputs, responseProperties, setResponseProperties } = useAppContext();
   const [ lastCalledDescription, setLastCalledDescription ] = useState('');
   const [ usageExceeded, setUsageExceeded ] = useState(false)
 
@@ -92,7 +92,7 @@ export const Schema = ({apiDescription}: {apiDescription: string}) => {
         <h3>{apiDescription}</h3>
       </FadeInUp>
       <FadeInUp delay={200}>
-        <Demo apiDescription={apiDescription} userInputs={userInputs} responseProperties={responseProperties} />
+        <Demo apiDescription={apiDescription} />
       </FadeInUp>
       <FadeIn delay={1000}>
         <SchemaForm  apiDescription={apiDescription} />
